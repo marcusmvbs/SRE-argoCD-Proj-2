@@ -1,0 +1,3 @@
+ingressController:
+  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:latest
+  replicas: 1  # Change this to the desired number of replicas
