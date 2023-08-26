@@ -1,35 +1,38 @@
 apiVersion: v1
-kind: Service
+kind: Namespace
 metadata:
-  name: sql-service
-  namespace: database-ns
-spec:
-  selector:
-    app: sql-db
-  ports:
-    - protocol: TCP
-      port: 3306
-      targetPort: 3306
+  name: database-ns
 
 ---
 
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Secret
 metadata:
-  name: sql-pvc
-spec:
-  accessModes:
-    - {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
-  resources:
-    requests:
-      storage: {{ .Values.database.storage.size }}
+  name: database-credentials
+  namespace: database-ns
+type: Opaque
+data:
+  username: <base64-encoded-username>
+  password: <base64-encoded-password>
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+  namespace: database-ns
+data:
+  config.properties: |
+    key1: value1
+    key2: value2
 
 ---
 
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sql-db-sts
+  name: sql-database
   namespace: database-ns
 spec:
   serviceName: sql-service
@@ -61,3 +64,32 @@ spec:
         resources:
           requests:
             storage: {{ .Values.database.storage.size }}
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sql-pvc
+  namespace: database-ns
+spec:
+  accessModes:
+    - {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
+  resources:
+    requests:
+      storage: {{ .Values.database.storage.size }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sql-service
+  namespace: database-ns
+spec:
+  selector:
+    app: sql-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
