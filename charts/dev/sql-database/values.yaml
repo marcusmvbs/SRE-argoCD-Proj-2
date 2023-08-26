@@ -1,0 +1,3 @@
+sql-db-sts:
+  image: mysql:latest
+  replicas: 2
