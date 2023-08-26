@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/marcusmvbs/SRE-argoCD-Proj-2.git
+    targetRevision: user1
+    path: charts/dev  # Path to your Helm chart directory
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  helm:
+    values:
+      - dev/nginx/values.yaml
+      - dev/prometheus/values.yaml
+      - dev/sql-database/values.yaml

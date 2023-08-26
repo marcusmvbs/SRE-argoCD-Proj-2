@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sql-db-sts
+  namespace: database-ns
+spec:
+  serviceName: sql-service
+  replicas: {{ .Values.sqlDatabase.replicas }}
+  selector:
+    matchLabels:
+      app: sql-db
+  template:
+    metadata:
+      labels:
+        app: sql-db
+    spec:
+      containers:
+        - name: sql-container
+          image: {{ .Values.sqlDatabase.image }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+          ports:
+            - containerPort: 3306
+  volumeClaimTemplates:
+    - metadata:
+        name: sql-pvc
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sql-service
+  namespace: database-ns
+spec:
+  selector:
+    app: sql-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

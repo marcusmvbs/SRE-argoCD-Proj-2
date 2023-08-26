@@ -1,0 +1,5 @@
+prometheus:
+  image: prom/prometheus:latest
+  scrapeInterval: 30s
+  targets:
+    - nginx-service:80
