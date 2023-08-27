@@ -39,11 +39,11 @@ spec:
   replicas: {{ .Values.sqlDatabase.replicas }}
   selector:
     matchLabels:
-      app: sql-db
+      app: sql-database
   template:
     metadata:
       labels:
-        app: sql-db
+        app: sql-database
     spec:
       containers:
         - name: sql-container
@@ -88,7 +88,7 @@ metadata:
   namespace: database-ns
 spec:
   selector:
-    app: sql-db
+    app: sql-database
   ports:
     - protocol: TCP
       port: 3306
