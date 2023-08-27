@@ -1,3 +1,8 @@
 sql-db-sts:
   image: mysql:latest
   replicas: 2
+  storage:
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeClaimName: my-database-pvc

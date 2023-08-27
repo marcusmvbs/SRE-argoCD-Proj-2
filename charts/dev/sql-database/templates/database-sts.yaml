@@ -1,18 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: database-ns
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-credentials
+  namespace: database-ns
+type: Opaque
+data:
+  username: <base64-encoded-username>
+  password: <base64-encoded-password>
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+  namespace: database-ns
+data:
+  config.properties: |
+    key1: value1
+    key2: value2
+
+---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sql-db-sts
+  name: sql-database
   namespace: database-ns
 spec:
   serviceName: sql-service
   replicas: {{ .Values.sqlDatabase.replicas }}
   selector:
     matchLabels:
-      app: sql-db
+      app: sql-database
   template:
     metadata:
       labels:
-        app: sql-db
+        app: sql-database
     spec:
       containers:
         - name: sql-container
@@ -29,10 +60,24 @@ spec:
     - metadata:
         name: sql-pvc
       spec:
-        accessModes: [ "ReadWriteOnce" ]
+        accessModes: {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
         resources:
           requests:
-            storage: 10Gi
+            storage: {{ .Values.database.storage.size }}
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sql-pvc
+  namespace: database-ns
+spec:
+  accessModes:
+    - {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
+  resources:
+    requests:
+      storage: {{ .Values.database.storage.size }}
 
 ---
 
@@ -43,7 +88,7 @@ metadata:
   namespace: database-ns
 spec:
   selector:
-    app: sql-db
+    app: sql-database
   ports:
     - protocol: TCP
       port: 3306
