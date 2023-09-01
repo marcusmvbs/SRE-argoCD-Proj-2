@@ -1,1 +1,1 @@
-argoCD used to deploy k8s cluster on GKE via Helm charts
+This repository is a continuation of the CI pipeline described in the repo: https://github.com/marcusmvbs/SRE-gitlab-CI-Proj-2. ArgoCD utilized to deploy updates on manifest files, that configures a kubernetes cluster on Google cloud. 
