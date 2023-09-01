@@ -8,6 +8,6 @@ Kubernetes is being used to deploy several services as:
     Kasten k10 - backup;
     Fluent bit - logs;
     Prometheus - monitoring;
-    Postgresql database - to write on a persistent volume on google cloud.
+    Postgresql database - storage.
 
 The project was created for study purposes. Improvements on config maps and secrets for each namespace, better configuration of each service described in the diagram, are still a work in progress. 
