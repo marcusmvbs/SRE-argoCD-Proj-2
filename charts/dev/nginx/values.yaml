@@ -1,4 +1,28 @@
 nginx:
-  image: nginx:1.25
-  replicas: 2
-  port: 80
+  enabled: true
+  namespace: nginx_server-ns
+
+  configmap:
+    enabled: true
+    name: configmap
+
+  secrets:
+    prometheus-tls-secret:
+      secretName: 
+      dataKey: tls.crt 
+    prometheus-ingress-tls-secret:
+      secretName: 
+      dataKey: tls.crt 
+
+  service:
+    annotations: {}
+    namespace: nginx_server-ns
+    name: nginx-svc
+    port: 80
+
+  deployment:
+    enabled: true
+    namespace: nginx_server-ns
+    name: nginx-depl
+    replicas: 2
+    image: nginx:1.25

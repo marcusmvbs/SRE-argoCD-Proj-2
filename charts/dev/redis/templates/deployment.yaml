@@ -1,17 +1,10 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cache-ns
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-deployment
-  namespace: cache-ns
+  name: redis
+  namespace: {{ .Values.redis.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.redis.deployment.replicas }}
   selector:
     matchLabels:
       app: redis
@@ -22,7 +15,6 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis:latest
+          image: {{ .Values.redis.deployment.image }}
           ports:
-            - containerPort: 6379
-
+            - containerPort: {{ .Values.redis.service.port }}

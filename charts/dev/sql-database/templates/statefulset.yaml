@@ -8,49 +8,49 @@ metadata:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: sql-database
+  name: {{ .Values.postgresql-db.statefulset.db-sts-Name }}
   namespace: database-ns
 spec:
-  serviceName: sql-service
-  replicas: {{ .Values.sqlDatabase.replicas }}
+  serviceName: {{ .Values.postgresql-db.service.postgresqlServiceName }}
+  replicas: {{ .Values.postgresql-db.statefulset.replicas }}
   selector:
     matchLabels:
-      app: sql-database
+      app: postgresql-db
   template:
     metadata:
       labels:
-        app: sql-database
+        app: postgresql-db
     spec:
       containers:
         - name: sql-container
-          image: {{ .Values.sqlDatabase.image }}
+          image: {{ .Values.postgresql-db.statefulset.image }}
           env:
-            - name: MYSQL_ROOT_PASSWORD
+            - name: {{ .Values.postgresql-db.secret.postgresqlPassword }}
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
                   key: password
           ports:
-            - containerPort: 3306
+            - containerPort: {{ .Values.postgresql-db.service.postgresqlPort }}
   volumeClaimTemplates:
     - metadata:
-        name: sql-pvc
+        name: {{ .Values.postgresql-db.statefulset.storage.VolumeClaimName }}
       spec:
-        accessModes: {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
+        accessModes: {{ .Values.postgresql-db.statefulset.storage.accessModes | toYaml | nindent 8 }}
         resources:
           requests:
-            storage: {{ .Values.database.storage.size }}
+            storage: {{ .Values.postgresql-db.statefulset.storage.size }}
 
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sql-pvc
+  name: {{ .Values.postgresql-db.statefulset.storage.VolumeClaimName }}
   namespace: database-ns
 spec:
   accessModes:
-    - {{ .Values.database.storage.accessModes | toYaml | nindent 8 }}
+    - {{ .Values.postgresql-db.statefulset.storage.accessModes | toYaml | nindent 8 }}
   resources:
     requests:
-      storage: {{ .Values.database.storage.size }}
+      storage: {{ .Values.postgresql-db.statefulset.storage.size }}

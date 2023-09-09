@@ -1,0 +1,48 @@
+redis:
+  enabled: true
+  namespace: cache-ns
+
+  cluster:
+    enabled: false
+
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+
+  slave:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 1Gi
+
+  usePassword: false
+  password: ""
+
+  configmap:
+    name: redis-configmap
+
+  secrets:
+    redis-password-secret: my-redis-password-secret
+
+  deployment:
+    enabled: true
+    namespace: cache-ns
+    name: redis
+    replicas: 1
+    image: bitnami/redis:18.0.0
+
+  service:
+    enabled: true
+    namespace: cache-ns
+    name: redis-svc
+    type: ClusterIP
+    port: 6379
+    nodePort: ""
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    labels: {}
+    clusterIP: ""
+    redisSlowLog: ""
+    slaveCount: 1

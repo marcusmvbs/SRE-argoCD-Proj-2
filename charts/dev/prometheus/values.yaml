@@ -1,5 +1,28 @@
 prometheus:
-  image: prom/prometheus:latest
-  scrapeInterval: 30s
-  targets:
-    - nginx-service:80
+  enabled: true
+  namespace: prometheus-ns
+
+  configmap:
+    enabled: true
+    name: configmap
+
+  secrets:
+    prometheus-tls-secret:
+      secretName: prometheus-tls-secret
+      dataKey: tls.crt 
+    prometheus-ingress-tls-secret:
+      secretName: prometheus-ingress-tls-secret
+      dataKey: tls.crt 
+
+  service:
+    annotations: {}
+    namespace: prometheus-ns
+    name: prom-svc
+    port: 9216
+
+  deployment:
+    enabled: true
+    namespace: prometheus-ns
+    name: prom-depl
+    replicas: 1
+    image: prometheus:latest

@@ -1,8 +1,43 @@
-sql-db-sts:
-  image: mysql:latest
+postgresql-db:
+  enabled: true
+  postgresqlUsername: POSTGRESQL_ROOT_USERNAME
+  postgresqlPassword: POSTGRESQL_ROOT_PASSWORD
+  postgresqlDatabase: mydatabase
+
+configmap:
+  postgresqlConfigMap:
+    postgresql-config: # |
+      # # PostgreSQL configuration
+      # max_connections = 100
+      # shared_buffers = 2GB
+      # effective_cache_size = 4GB
+      # maintenance_work_mem = 256MB
+      # checkpoint_completion_target = 0.9
+      # wal_buffers = 16MB
+      # default_statistics_target = 100
+      # random_page_cost = 1.1
+      # effective_io_concurrency = 200
+      # work_mem = 5242kB
+      # min_wal_size = 1GB
+      # max_wal_size = 2GB
+
+secret:
+  postgresqlSecret:
+    postgresqlPassword: POSTGRESQL_ROOT_PASSWORD
+
+service:
+  enabled: true
+  postgresqlServiceName: sql-service
+  postgresqlPort: 3306
+
+statefulset:
+  enabled: true
+  
+  db-sts-Name: postgresql-db
   replicas: 2
+  image: bitnami/postgresql:12.0.0
   storage:
-    size: 10Gi
     accessModes:
       - ReadWriteOnce
-    persistentVolumeClaimName: my-database-pvc
+    size: 10Gi
+    VolumeClaimName: database-pvc
