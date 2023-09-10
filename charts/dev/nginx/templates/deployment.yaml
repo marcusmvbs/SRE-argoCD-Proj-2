@@ -8,6 +8,11 @@ spec:
   selector:
     matchLabels:
       app: nginx-app
+  strategy:
+    type: RollingUpdate # Default | other types: Recreate, Blue/Green, Canary, A/B, Shadow
+    rollingUpdate:
+    maxSurge: 50%       # Pods % to surge  applying update (kubectl edit), based on the amount of total pods deployed
+    maxUnavailable: 10% # Pods % to delete applying update (kubectl edit), ...
   template:
     metadata:
       labels:
@@ -18,3 +23,5 @@ spec:
           image: {{ .Values.nginx.deployment.image }}
           ports:
             - containerPort: {{ .Values.nginx.service.port }}
+
+# CLI cmd for testing | kubectl create deployment nginx-depl --replicas=2 --image nginx:1.25
