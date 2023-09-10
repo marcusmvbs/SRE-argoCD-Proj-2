@@ -3,7 +3,6 @@ prometheus:
   namespace: prometheus-ns
 
   configmap:
-    enabled: true
     name: configmap
 
   secrets:
@@ -21,8 +20,7 @@ prometheus:
     port: 9216
 
   deployment:
-    enabled: true
     namespace: prometheus-ns
     name: prom-depl
     replicas: 1
-    image: prometheus:latest
+    image: prometheus:24.0.0

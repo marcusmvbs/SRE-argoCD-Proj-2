@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k10
-  namespace: backup-ns
+  name: {{ .Values.kasten.deployment.name }}
+  namespace: {{ .Values.kasten.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.kasten.deployment.replicas }}
   selector:
     matchLabels:
       app: kasten-io
@@ -15,11 +15,6 @@ spec:
     spec:
       containers:
         - name: k10
-          image: kasten/k10:latest
+          image: {{ .Values.kasten.deployment.image }}
           ports:
-            - containerPort: 8080
-          env:
-            - name: K10_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+            - containerPort: {{ .Values.kasten.service.port }}

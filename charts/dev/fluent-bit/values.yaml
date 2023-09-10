@@ -1,0 +1,21 @@
+fluent-bit:
+  enabled: true
+  namespace: logging-ns
+
+  configmap:
+    name: configmap
+
+  secrets:
+    logging-password-secret: logging-password-secret
+
+  service:
+    annotations: {}
+    namespace: logging-ns
+    name: fluent-bit-svc
+    port: 80
+
+  deployment:
+    namespace: logging-ns
+    name: fluentbit-depl
+    replicas: 1
+    image: fluent/fluent-bit

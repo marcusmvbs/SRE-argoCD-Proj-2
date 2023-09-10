@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ingress-controller
-  namespace: nginx-ingress
+  name: {{ .Values.ingress.deployment.name }}
+  namespace: {{ .Values.ingress.namespace }}
 spec:
-  replicas: {{ .Values.ingressController.replicas }}
+  replicas: {{ .Values.ingress.deployment.replicas }}
   selector:
     matchLabels:
       app: ingress-controller
@@ -15,10 +15,7 @@ spec:
     spec:
       containers:
         - name: ingress-controller
-          image: {{ .Values.ingressController.image }}
-          args:
-            - /nginx-ingress-controller
-            - --configmap=$(POD_NAMESPACE)/nginx-config
+          image: {{ .Values.ingress.deployment.image }}
           ports:
-            - containerPort: 80
-            - containerPort: 443
+            - containerPort: {{ .Values.ingress.service.ports.port1 }}
+            - containerPort: {{ .Values.ingress.service.ports.port2 }}

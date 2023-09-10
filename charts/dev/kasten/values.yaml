@@ -1,0 +1,21 @@
+kasten:
+  enabled: true
+  namespace: kasten-ns
+
+  configmap:
+    name: configmap
+
+  secrets:
+    kasten-password-secret: kasten-password-secret
+
+  service:
+    annotations: {}
+    namespace: kasten-ns
+    name: k10-svc
+    port: 8080
+
+  deployment:
+    namespace: kasten-ns
+    name: k10-depl
+    replicas: 1
+    image: kasten/k10:latest

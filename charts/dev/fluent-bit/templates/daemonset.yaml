@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fluentbit
+  name: {{ .Values.fluent-bit.deployment.name }}
+  namespace: {{ .Values.fluent-bit.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.fluent-bit.deployment.replicas }}
   selector:
     matchLabels:
       app: fluentbit
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: fluentbit
-          image: fluent/fluent-bit:latest
+          image: {{ .Values.fluent-bit.deployment.image }}
           volumeMounts:
             - name: config
               mountPath: /fluent-bit/etc/

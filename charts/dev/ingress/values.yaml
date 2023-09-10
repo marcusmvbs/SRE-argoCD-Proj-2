@@ -1,3 +1,23 @@
-ingressController:
-  image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:latest
-  replicas: 1  # Change this to the desired number of replicas
+ingress:
+  enabled: true
+  namespace: ingress-ns
+
+  configmap:
+    name: configmap
+
+  secrets:
+    ingress-password-secret: ingress-password-secret
+
+  service:
+    annotations: {}
+    namespace: ingress-ns
+    name: ingress-svc
+    ports:
+      - port1: 80
+      - port2: 443
+
+  deployment:
+    namespace: ingress-ns
+    name: ingress-depl
+    replicas: 1
+    image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:latest

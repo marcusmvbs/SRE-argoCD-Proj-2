@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.prometheus.namespace }}
 spec:
   selector:
-    app: prom
+    app: prometheus
   ports:
     - port: {{ .Values.prometheus.service.port }}
       targetPort: {{ .Values.prometheus.service.port }}
